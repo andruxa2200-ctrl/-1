@@ -28,8 +28,12 @@ namespace Викторина.Models
         [MinLength(4, ErrorMessage = "Пароль слишком короткий (минимум 4 символа)!")]
         public string Password { get; set; }
 
-        public DateTime RegistrationDate { get; set; }
+        [Required(ErrorMessage = "Логин обязателен!")]
+        [MinLength(1, ErrorMessage = "Логин должно содержать минимум 2 символ!")]
         public string Login { get; set; } 
+
+        public DateTime RegistrationDate { get; set; }
+       
         public int Score { get; set; }
         public Registration() 
         {
@@ -40,7 +44,7 @@ namespace Викторина.Models
             Password = string.Empty;     
             RegistrationDate = DateTime.Now;
             Login = string.Empty;
-            Score = 0;
+            Score = 0; // баллы 
         }
         
         public Registration(string firstName, string lastName, string email, string password,string login)
@@ -51,7 +55,7 @@ namespace Викторина.Models
             Email = email ?? string.Empty;
             Password = password ?? string.Empty;
             RegistrationDate = DateTime.Now;
-            Login= login ?? string.Empty;
+            Login = login ?? string.Empty;
             Score = 0;
         }
     }

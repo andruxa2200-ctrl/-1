@@ -41,6 +41,8 @@ namespace Викторина.Models
             Console.WriteLine("Введите Email: ");
             var email = Console.ReadLine()?.Trim();
 
+            Console.WriteLine("Введите логин");
+            var Login = Console.ReadLine()?.Trim();
 
             Console.WriteLine("Введите пароль:");
             var password = Console.ReadLine()?.Trim() ?? string.Empty;
@@ -50,13 +52,12 @@ namespace Викторина.Models
                 Console.WriteLine("Имя и Email нужно записать!");
                 return;
             }
-            var registration = new Registration
-            {
+            var registration = new Registration 
+            { 
                 FirstName = firstName,
                 LastName = lastName ?? string.Empty,
-                Email = email,
-                Password = password
-
+                Email = email, Password = password,
+                Login = Login 
             };
             if (!ValidateContact(registration, out string? errorMessage))
             {

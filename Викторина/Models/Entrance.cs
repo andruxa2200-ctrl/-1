@@ -12,19 +12,19 @@ namespace Викторина.Models
         public static void Login(ICrud db)
         {  
             Console.Clear();
-            Console.WriteLine("Вход в систему \n");
+            Console.WriteLine("Вход в систему \n"); 
 
-            Console.Write("Введите Email: ");
+            Console.Write("Введите Login: ");
             string login = Console.ReadLine()?.Trim() ?? string.Empty;
 
             Console.Write("Введите password: ");
             string password = Console.ReadLine()?.Trim() ?? string.Empty;
 
-            var user = db.GetAll().FirstOrDefault( x => x.Email == login);
+            var user = db.GetAll().FirstOrDefault( x => x.Login == login);
 
             if(user == null) 
             {
-                Console.WriteLine("Пользователь с таким Email не найден!");
+                Console.WriteLine("Пользователь с таким Login не найден!");
                 return;
             }
             if  (user.Password == password)

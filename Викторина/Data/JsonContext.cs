@@ -73,6 +73,7 @@ public class JsonContext : ICrud
             existing.LastName = registration.LastName;
             existing.Email = registration.Email;
             existing.Password = registration.Password;
+            existing.Login = registration.Login;
             existing.Score = registration.Score;
 
             SaveChanges();  

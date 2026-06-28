@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
-using Викторина.Models;
+
+
 
 namespace Викторина.Models
 {
     public class Registration
     {
+        [Key]
+        public Guid Id { get; set; }
+
         [Required(ErrorMessage = "Имя обязательно!")]
         [MinLength(1, ErrorMessage = "Имя должно содержать минимум 1 символ!")]
         public string FirstName { get; set; }
@@ -24,13 +28,31 @@ namespace Викторина.Models
         [MinLength(4, ErrorMessage = "Пароль слишком короткий (минимум 4 символа)!")]
         public string Password { get; set; }
 
-        public int Score { get; set; }
-
         public DateTime RegistrationDate { get; set; }
-
-        public Registration()
+        public string Login { get; set; } 
+        public int Score { get; set; }
+        public Registration() 
         {
+            Id = Guid.NewGuid();
+            FirstName = string.Empty;    
+            LastName = string.Empty;     
+            Email = string.Empty;        
+            Password = string.Empty;     
             RegistrationDate = DateTime.Now;
+            Login = string.Empty;
+            Score = 0;
+        }
+        
+        public Registration(string firstName, string lastName, string email, string password,string login)
+        {
+            Id = Guid.NewGuid();
+            FirstName = firstName ?? string.Empty;
+            LastName = lastName ?? string.Empty;
+            Email = email ?? string.Empty;
+            Password = password ?? string.Empty;
+            RegistrationDate = DateTime.Now;
+            Login= login ?? string.Empty;
+            Score = 0;
         }
     }
 }

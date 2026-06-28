@@ -4,14 +4,24 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using Викторина.Models;
+using Викторина.Interfaces;
 
-namespace PhoneBookApp.DAL;
+namespace Викторина.Data;
 
+//Отвечает за ХРАНЕНИЕ книг(данных) и работу с файлами
 public class JsonContext : ICrud
-{
+{   
+    public JsonContext(string pathToJson)
+    {
+        PathToJson = pathToJson;
+    }
+    public JsonContext()
+    {
+        PathToJson = "contacts.json"; 
+    }
     private readonly List<Registration> _contacts = [];
     private bool _isLoaded = false;
-    public required string PathToJson { get; init; }
+    public string PathToJson { get; set; } = "contacts.json";
 
     public void Load()
     {
@@ -40,6 +50,19 @@ public class JsonContext : ICrud
     public IEnumerable<Registration> GetAll()
     { return _contacts; }
 
+    public void Password(string password)
+    {
+        _isLoaded = true; SaveChanges();
+    }
+    public void RegistrationDate(DateTime date)
+    {
+        _isLoaded = true; SaveChanges();
+
+    }
+    public void Login()
+    {
+        _isLoaded = true; SaveChanges();
+    }
     public void Update(Registration registration)
     {
         var existing = GetById(registration.Id); 
@@ -55,6 +78,11 @@ public class JsonContext : ICrud
             SaveChanges();  
         }
     }
+    public Registration? GetById(Guid id)
+    {
+       var contact = _contacts.FirstOrDefault(x => x.Id == id); //ищет человека по его уникальному номеру (как паспорт или ИНН).
+       return contact;
+    }
 
     public void Delete(Guid id)
     {
@@ -67,10 +95,10 @@ public class JsonContext : ICrud
     private Registration SearchContact(Guid id)
     {
         var contact = _contacts.SingleOrDefault(c => c.Id == id);
-        return contact ?? throw new ArgumentOutOfRangeException($"{id} not found");
+        return contact ?? throw new ArgumentOutOfRangeException($"{id} not found"); //
     }
 
-    private void SaveChanges()
+    public void SaveChanges()
     {
         var json = JsonSerializer.Serialize(_contacts);
         File.WriteAllText(PathToJson, json);

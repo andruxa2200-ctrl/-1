@@ -29,7 +29,7 @@ namespace Викторина.Models
                     Console.WriteLine(item.Key);
                 }
                 Console.WriteLine("Выберите пункт \n");
-                string choice = Console.ReadLine();
+                string? choice = Console.ReadLine();
 
                 bool found = false;
                 foreach (var item in menu)

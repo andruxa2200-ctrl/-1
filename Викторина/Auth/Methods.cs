@@ -29,7 +29,7 @@ namespace Викторина.Models
         public static void AddRegistration(ICrud db)
         {
             Console.Clear();
-            Console.WriteLine("РЕГИСТРАЦИЯ НА ВИКТОРИНУ :");
+            Console.WriteLine("Регистрация на векторину:");
 
             Console.WriteLine("Введите Имя:");
             var firstName = Console.ReadLine()?.Trim();

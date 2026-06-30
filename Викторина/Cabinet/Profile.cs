@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Викторина.Interfaces;
+using Викторина.Models;
 
-namespace Викторина.Models
+namespace Викторина.Cabinet
 {
-    public class Cabinet
+    public class Profile
     {
         public static void Show(ICrud db, Registration user)
         {
@@ -25,29 +26,29 @@ namespace Викторина.Models
                 Console.WriteLine("5. Выход из аккаунта");
 
                 Console.WriteLine($"Выбирети пункт");
-                string choice = Console.ReadLine();
-
-                switch(choice) 
-                {
-                    case "1":
-                        StartQuiz(db, user); 
-                        break;
-
-
-
-
+                string? choice = Console.ReadLine();
+                if(choice == null)
+                {  
+                    Console.WriteLine("Ошибка ввода ");
+                    return;
                 }
 
+                switch(choice)
+                {
+                    case "1":
+                        StartQuiz(db, user); break;
+
+                    //case "2":
+                    //    Results.(db, user);  
+                    //    break;
+                }
             }
-
-            //private static void StartQuiz(ICrud db, Registration user)
-            //private static void ShowMyResults(ICrud db, Registration user)
-            //private static void ShowTop20(ICrud db)
-            
         }
+        private static void StartQuiz(ICrud db, Registration user)
+        {
+            Console.WriteLine("Запуск програмы: ");
+            Console.ReadLine();
 
-
-
-
+        }   
     }
 }

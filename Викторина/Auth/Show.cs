@@ -21,7 +21,13 @@ namespace Викторина.Models
                 Console.WriteLine("Нет зарегистрированных участников!");
                 return;
             }
+            int counter = 1;
 
+            foreach(var user in all)
+            {
+                Console.WriteLine($"{counter}.{user.FirstName} {user.LastName} | Логин {user.Login} |  Email: {user.Email} | Баллы: {user.Score} ");   
+                counter++;
+            }
 
         }
 

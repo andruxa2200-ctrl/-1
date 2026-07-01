@@ -33,7 +33,9 @@ namespace Викторина.Models
         public string Login { get; set; } 
 
         public DateTime RegistrationDate { get; set; }
-       
+
+        public List<QuizResult> Results { get; set; } = new List<QuizResult>();
+
         public int Score { get; set; }
         public Registration() 
         {
@@ -45,6 +47,7 @@ namespace Викторина.Models
             RegistrationDate = DateTime.Now;
             Login = string.Empty;
             Score = 0; // баллы 
+            Results = [];
         }
         
         public Registration(string firstName, string lastName, string email, string password,string login)
@@ -57,6 +60,7 @@ namespace Викторина.Models
             RegistrationDate = DateTime.Now;
             Login = login ?? string.Empty;
             Score = 0;
+            Results = [];
         }
     }
 }

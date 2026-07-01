@@ -14,6 +14,7 @@ public class JsonContext : ICrud
     public JsonContext(string pathToJson)
     {
         PathToJson = pathToJson;
+        
     }
     public JsonContext()
     {
@@ -23,6 +24,15 @@ public class JsonContext : ICrud
     private bool _isLoaded = false;
     public string PathToJson { get; set; } = "contacts.json";
 
+    public static void CheckUsers(ICrud db)
+    {
+        var all = db.GetAll();
+        foreach (var user in all)
+        {
+            Console.WriteLine($"- {user.FirstName} {user.LastName} ({user.Login})");
+        }
+        Console.ReadKey();
+    }
     public void Load()
     {
         if (_isLoaded) return;
@@ -89,7 +99,6 @@ public class JsonContext : ICrud
     {
         var contact = SearchContact(id);
         _contacts.Remove(contact);
-
         SaveChanges();
     }
 

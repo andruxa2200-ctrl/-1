@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;        
-using Викторина.Interfaces;
+using Викторина.Cabinet;
 using Викторина.Data;
+using Викторина.Interfaces;
 
 namespace Викторина.Models
 {
@@ -25,16 +26,21 @@ namespace Викторина.Models
             if(user == null) 
             {
                 Console.WriteLine("Пользователь с таким Login не найден!");
+             
+                return;
                 return;
             }
             if  (user.Password == password)
             {
                 Console.WriteLine($"Вход выполнен! {user.FirstName}!");
-              
+
+                Profile.Show(db, user);
+
             }
             else
             {
                 Console.WriteLine(" Неправильный пароль!");
+              
             }
 
         }

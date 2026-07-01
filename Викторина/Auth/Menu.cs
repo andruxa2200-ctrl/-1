@@ -13,6 +13,7 @@ namespace Викторина.Models
         public static void Show()
         {
             ICrud db = new RegistrationRepository();
+            db.Load();
 
             var menu = new Dictionary<string, Action>()
             {

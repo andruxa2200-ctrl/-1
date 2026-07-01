@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using Викторина.Cabinet.Quiz;
 using Викторина.Interfaces;
 using Викторина.Models;
 
@@ -36,19 +38,21 @@ namespace Викторина.Cabinet
                 switch(choice)
                 {
                     case "1":
-                        StartQuiz(db, user); break;
+                       QuizsGame.Start(db, user);  break;
 
-                    //case "2":
-                    //    Results.(db, user);  
-                    //    break;
+                    case "2":
+                       Results.Show(db, user);  break;
+                     
+                    case "3":
+                    Top.ShowTop( db);  break;
+
+                    case "4":
+                        Settings.ChagaPassword(db, user); break;
+                
+                    case "5":                   
+                         return;
                 }
             }
         }
-        private static void StartQuiz(ICrud db, Registration user)
-        {
-            Console.WriteLine("Запуск програмы: ");
-            Console.ReadLine();
-
-        }   
     }
 }

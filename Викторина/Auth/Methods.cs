@@ -13,12 +13,12 @@ namespace Викторина.Models
 {
     public class Methods
     {
-        private static bool ValidateContact(Registration registration, out string? errorMessage)
+        private static bool ValidateContact(User user, out string? errorMessage)
         {
-            var context = new ValidationContext(registration);
+            var context = new ValidationContext(user);
             var results = new List<ValidationResult>();
 
-            if (Validator.TryValidateObject(registration, context, results, true))
+            if (Validator.TryValidateObject(user, context, results, true))
             {
                 errorMessage = null;
                 return true;
@@ -33,7 +33,6 @@ namespace Викторина.Models
 
             Console.WriteLine("Введите Имя:");
             var firstName = Console.ReadLine()?.Trim();
-
 
             Console.WriteLine("Введите фамилию:");
             var lastName = Console.ReadLine()?.Trim();
@@ -52,23 +51,25 @@ namespace Викторина.Models
                 Console.WriteLine("Имя и Email нужно записать!");
                 return;
             }
-            var registration = new Registration 
-            { 
+            var user = new User
+            {
                 FirstName = firstName,
                 LastName = lastName ?? string.Empty,
-                Email = email, Password = password,
-                Login = Login 
+                Email = email,
+                Password = password,
+                Login = Login
             };
-            if (!ValidateContact(registration, out string? errorMessage))
+            if (!ValidateContact(user, out string? errorMessage))
             {
                 Console.WriteLine($"\nОшибка:\n{errorMessage}");
-              
+
                 return;
             }
-            db.Add(registration);
+            db.Add(user);
             Console.WriteLine($"\n Участник {firstName} {lastName}  успешно зарегистрирован!");
-            Console.WriteLine($"\n Дата регистрации: {registration.RegistrationDate}");
-            Console.WriteLine($" Время регистрации: {registration.RegistrationDate.ToShortTimeString()}");
+            Console.WriteLine($"\n Дата регистрации: {user.RegistrationDate}");
+            Console.WriteLine($" Время регистрации: {user.RegistrationDate.ToShortTimeString()}");
         }
     }
 }
+

@@ -25,17 +25,13 @@ namespace Викторина.Models
 
             if(user == null) 
             {
-                Console.WriteLine("Пользователь с таким Login не найден!");
-             
-                return;
+                Console.WriteLine("Пользователь с таким Login не найден!");          
                 return;
             }
             if  (user.Password == password)
             {
                 Console.WriteLine($"Вход выполнен! {user.FirstName}!");
-
                 Profile.Show(db, user);
-
             }
             else
             {

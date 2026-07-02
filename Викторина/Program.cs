@@ -10,7 +10,7 @@ using Викторина.Models;
 Menu.Show();
 
 ICrud db = new RegistrationRepository();
-Registration user = new();
+User user = new();
 Profile.Show(db,user);
 
 

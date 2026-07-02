@@ -9,108 +9,52 @@ using Викторина.Interfaces;
 namespace Викторина.Data;
 
 //Отвечает за ХРАНЕНИЕ книг(данных) и работу с файлами
-public class JsonContext : ICrud
+public class JsonContext 
 {   
     public JsonContext(string pathToJson)
     {
         PathToJson = pathToJson;
+        Load();
         
     }
     public JsonContext()
     {
         PathToJson = "contacts.json"; 
+        Load();
     }
-    private readonly List<Registration> _contacts = [];
+    private  List<User> _contacts = [];
     private bool _isLoaded = false;
     public string PathToJson { get; set; } = "contacts.json";
 
-    public static void CheckUsers(ICrud db)
-    {
-        var all = db.GetAll();
-        foreach (var user in all)
-        {
-            Console.WriteLine($"- {user.FirstName} {user.LastName} ({user.Login})");
-        }
-        Console.ReadKey();
-    }
+    public List<User> Contacts => _contacts;
+
     public void Load()
     {
         if (_isLoaded) return;
 
-        var json = File.ReadAllText(PathToJson);
-        var contacts = JsonSerializer.Deserialize<IEnumerable<Registration>>(json);
-
-        if (contacts == null) return;
-
-        foreach (var contact in contacts)
+        if (!File.Exists(PathToJson) || new FileInfo(PathToJson).Length == 0)
         {
-            _contacts.Add(contact);
+            File.WriteAllText(PathToJson, "[]");
+            _isLoaded = true;
+            return;
+        }
+
+        try
+        {
+            var json = File.ReadAllText(PathToJson);
+            var contacts = JsonSerializer.Deserialize<List<User>>(json);
+            if (contacts != null) _contacts = contacts;
+        }
+        catch
+        {
+            _contacts = [];
         }
 
         _isLoaded = true;
     }
-
-    public void Add(Registration registration)
-    {
-        _contacts.Add(registration);
-
-        SaveChanges();
-    }
-
-    public IEnumerable<Registration> GetAll()
-    { return _contacts; }
-
-    public void Password(string password)
-    {
-        _isLoaded = true; SaveChanges();
-    }
-    public void RegistrationDate(DateTime date)
-    {
-        _isLoaded = true; SaveChanges();
-
-    }
-    public void Login()
-    {
-        _isLoaded = true; SaveChanges();
-    }
-    public void Update(Registration registration)
-    {
-        var existing = GetById(registration.Id); 
-
-        if (existing != null)  
-        {
-            existing.FirstName = registration.FirstName;
-            existing.LastName = registration.LastName;
-            existing.Email = registration.Email;
-            existing.Password = registration.Password;
-            existing.Login = registration.Login;
-            existing.Score = registration.Score;
-
-            SaveChanges();  
-        }
-    }
-    public Registration? GetById(Guid id)
-    {
-       var contact = _contacts.FirstOrDefault(x => x.Id == id); //ищет человека по его уникальному номеру (как паспорт или ИНН).
-       return contact;
-    }
-
-    public void Delete(Guid id)
-    {
-        var contact = SearchContact(id);
-        _contacts.Remove(contact);
-        SaveChanges();
-    }
-
-    private Registration SearchContact(Guid id)
-    {
-        var contact = _contacts.SingleOrDefault(c => c.Id == id);
-        return contact ?? throw new ArgumentOutOfRangeException($"{id} not found"); //
-    }
-
     public void SaveChanges()
     {
-        var json = JsonSerializer.Serialize(_contacts);
+        var json = JsonSerializer.Serialize(_contacts, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(PathToJson, json);
     }
 }

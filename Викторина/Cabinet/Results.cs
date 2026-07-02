@@ -9,7 +9,7 @@ namespace Викторина.Cabinet
 {
     public class Results
     {
-        public static void Show(ICrud db, Registration user)
+        public static void Show(ICrud db, User user)
         {       
            
                 Console.Clear();

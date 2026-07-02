@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
+using Викторина.Data;
 using Викторина.Interfaces;
 using Викторина.Models;
 
-namespace Викторина.Cabinet
+namespace Викторина.Cabinet.Quiz
 {
     public class QuizsGame
     {
-        public static void Start(ICrud db, Registration user)
+        public static void Start(ICrud db, User user)
         {
             Console.Clear();
             Console.WriteLine("Новая викторина: ");
@@ -24,7 +26,7 @@ namespace Викторина.Cabinet
             switch (choice)
             {
                 case "1":
-                    StartHistoryQuiz(db, user);
+                    Questions.StartHistoryQuiz(db, user);
                     break;
                 case "2":
                     StartGeographyQuiz(db, user);
@@ -38,8 +40,8 @@ namespace Викторина.Cabinet
                     break;
             }
         }
-        private static void StartHistoryQuiz(ICrud db, Registration user) { }
-        private static void StartGeographyQuiz(ICrud db, Registration user) { }
-        private static void StartScienceQuiz(ICrud db, Registration user) { }
+
+        private static void StartGeographyQuiz(ICrud db, User user) { }
+        private static void StartScienceQuiz(ICrud db, User user) { }
     }
 }

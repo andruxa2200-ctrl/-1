@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Викторина.Interfaces;
+using Викторина.Models;
 
 namespace Викторина.Cabinet
 {
@@ -11,33 +12,35 @@ namespace Викторина.Cabinet
         public static void ShowTop(ICrud db)
         {
             Console.Clear();
-            Console.WriteLine("Показать Топ 20 участников: ");
+            Console.WriteLine("=== ТОП-20 УЧАСТНИКОВ ===\n");
 
-            var allUser = db.GetAll();
+            var allUsers = db.GetAll();
 
-            if (allUser == null || !allUser.Any())
+            if (allUsers == null || !allUsers.Any())
             {
-                Console.WriteLine("Нет зарегистрированых участников!");
-                Console.WriteLine("\nНажмите Enter для возврата...");
-                Console.ReadLine();
+                Console.WriteLine("Нет зарегистрированных участников!");
+                Console.WriteLine("\nНажмите любую клавишу для возврата...");
+                Console.ReadKey();
                 return;
             }
-            var top20 = allUser
+
+            var top20 = allUsers
                      .OrderByDescending(u => u.Score)
                      .Take(20)
                      .ToList();
-            Console.WriteLine("Место | Имя | Фамилия | Баллы");
+
+            Console.WriteLine("{0,-5} | {1,-15} | {2,-15} | {3,-6}", "№", "Логин", "Имя", "Баллы");
+            Console.WriteLine(new string('-', 50));
 
             int place = 1;
             foreach (var user in top20)
             {
-                Console.WriteLine($"{place,4} | {user.FirstName,-10} | {user.LastName,-10} | {user.Score,5}");
+                Console.WriteLine("{0,-5} | {1,-15} | {2,-15} | {3,-6}", place, user.Login, user.FirstName, user.Score);
                 place++;
             }
 
-            Console.WriteLine("\nНажмите Enter для возврата...");
-            Console.ReadLine();
-
+            Console.WriteLine("\nНажмите любую клавишу для возврата...");
+            Console.ReadKey();
         }
     }
 }

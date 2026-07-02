@@ -14,47 +14,46 @@ namespace Викторина.Data
         {
             _context = new JsonContext("contacts.json");
         }
-        public void Add(Registration registration)
+        public void Add(User user)
         {
-            _context.Add(registration);
+            _context.Contacts.Add(user);
         }
-        public IEnumerable<Registration> GetAll()
+        public IEnumerable<User> GetAll()
         {
-            return _context.GetAll();
-        }
-        public void Password(string password)
-        {
-            _context.Password(password);
-        }
-        public void RegistrationDate(DateTime date)
-        {
-            _context.RegistrationDate(date);
-        }
-        public void Login()
-        {
-            _context.Login();
-        }
-        public void Update(Registration registration)
-        {
-            _context.Update(registration);
+            return _context.Contacts; ;
         }
 
-        public Registration? GetById(Guid id) 
+        public void Update(User user)
         {
-           return _context.GetById(id);
+            var existing = GetById(user.Id);
+            if (existing != null)
+            {
+                existing.FirstName = user.FirstName;
+                existing.LastName = user.LastName;
+                existing.Email = user.Email;
+                existing.Password = user.Password;
+                existing.Login = user.Login;
+                existing.Score = user.Score;
+                _context.SaveChanges();
+            }
+        }
+
+        public User? GetById(Guid id)
+        {
+            return _context.Contacts.FirstOrDefault(x => x.Id == id);
         }
         public void Delete(Guid id)
         {
-             _context.Delete(id);
-        }
-        public void Load()
-        {
-            _context.Load();
-
+            var contact = GetById(id);
+            if (contact != null)
+            {
+                _context.Contacts.Remove(contact);
+                _context.SaveChanges();
+            }
         }
         public void SaveChanges()
-        { 
-            _context.SaveChanges(); 
+        {
+            _context.SaveChanges();
         }
     }
 }

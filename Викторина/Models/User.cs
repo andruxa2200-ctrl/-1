@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-
-
 namespace Викторина.Models
 {
-    public class Registration
+    public class User
     {
         [Key]
         public Guid Id { get; set; }
@@ -18,7 +16,7 @@ namespace Викторина.Models
 
         [Required(ErrorMessage = "Фамилия обязателенo!")]
         [MinLength(1, ErrorMessage = "Фамилия должно содержать минимум 1 символ!")]
-        public string LastName { get; set; } 
+        public string LastName { get; set; }
 
         [Required(ErrorMessage = "Email обязателен!")]
         [EmailAddress(ErrorMessage = "Введите корректный email!")]
@@ -30,27 +28,25 @@ namespace Викторина.Models
 
         [Required(ErrorMessage = "Логин обязателен!")]
         [MinLength(1, ErrorMessage = "Логин должно содержать минимум 2 символ!")]
-        public string Login { get; set; } 
+        public string Login { get; set; }
 
         public DateTime RegistrationDate { get; set; }
 
         public List<QuizResult> Results { get; set; } = new List<QuizResult>();
 
         public int Score { get; set; }
-        public Registration() 
+        public User()
         {
             Id = Guid.NewGuid();
-            FirstName = string.Empty;    
-            LastName = string.Empty;     
-            Email = string.Empty;        
-            Password = string.Empty;     
-            RegistrationDate = DateTime.Now;
+            FirstName = string.Empty;
+            LastName = string.Empty;
+            Email = string.Empty;
+            Password = string.Empty;
             Login = string.Empty;
-            Score = 0; // баллы 
+            RegistrationDate = DateTime.Now;
             Results = [];
         }
-        
-        public Registration(string firstName, string lastName, string email, string password,string login)
+        public User(string firstName, string lastName, string email, string password, string login)
         {
             Id = Guid.NewGuid();
             FirstName = firstName ?? string.Empty;
@@ -59,8 +55,8 @@ namespace Викторина.Models
             Password = password ?? string.Empty;
             RegistrationDate = DateTime.Now;
             Login = login ?? string.Empty;
-            Score = 0;
             Results = [];
         }
     }
 }
+

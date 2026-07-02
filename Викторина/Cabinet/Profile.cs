@@ -11,7 +11,7 @@ namespace Викторина.Cabinet
 {
     public class Profile
     {
-        public static void Show(ICrud db, Registration user)
+        public static void Show(ICrud db, User user)
         {
             while(true)
             {
@@ -47,7 +47,7 @@ namespace Викторина.Cabinet
                     Top.ShowTop( db);  break;
 
                     case "4":
-                        Settings.ChagaPassword(db, user); break;
+                        Settings.ChangePassword(db, user); break;
                 
                     case "5":                   
                          return;

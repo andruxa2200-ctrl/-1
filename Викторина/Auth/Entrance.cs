@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;        
+using System.Linq;
 using Викторина.Cabinet;
-using Викторина.Data;
 using Викторина.Interfaces;
 
 namespace Викторина.Models
@@ -11,37 +8,45 @@ namespace Викторина.Models
     public class Entrance
     {
         public static void Login(ICrud db)
-        {  
-            Console.Clear();
-            Console.WriteLine("Вход в систему \n"); 
-
-            Console.Write("Введите Login: ");
-            string login = Console.ReadLine()?.Trim() ?? string.Empty;
-
-            Console.Write("Введите password: ");
-            string password = Console.ReadLine()?.Trim() ?? string.Empty;
-
-            var user = db.GetAll().FirstOrDefault( x => x.Login == login);
-
-            if(user == null) 
+        {
+            while (true)
             {
-                Console.WriteLine("Пользователь с таким Login не найден!");          
-                return;
-            }
-            if  (user.Password == password)
-            {
-                Console.WriteLine($"Вход выполнен! {user.FirstName}!");
-                Profile.Show(db, user);
-            }
-            else
-            {
-                Console.WriteLine(" Неправильный пароль!");
-              
-            }
+                try
+                {
+                    UI.Clear();
+                    UI.Print("=== ВХОД В СИСТЕМУ ===\n");
 
+                    string login = UI.ReadString("Введите Login");
+                    string password = UI.ReadPassword("Введите Password");
+
+                    var user = db.GetAll().FirstOrDefault(x => x.Login == login);
+
+                    if (user == null)
+                    {
+                        UI.Error("Пользователь с таким Login не найден!");
+                        if (UI.ReadString("Попробовать снова? (y/n)").ToLower() != "y") return;
+                        continue;
+                    }
+
+                    if (user.Password == password)
+                    {
+                        UI.Success($"Вход выполнен! Добро пожаловать, {user.FirstName}!");
+                        UI.WaitForKey();
+                        Profile.Show(db, user);
+                        break;
+                    }
+                    else
+                    {
+                        UI.Error("Неправильный пароль!");
+                        if (UI.ReadString("Попробовать снова? (y/n)").ToLower() != "y") return;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    UI.Error($"Ошибка при входе: {ex.Message}");
+                    if (UI.ReadString("Попробовать снова? (y/n)").ToLower() != "y") return;
+                }
+            }
         }
-      
-
-
     }
 }

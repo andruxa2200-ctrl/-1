@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
 using Викторина.Interfaces;
-using Викторина.Data;
 
 namespace Викторина.Models
 {

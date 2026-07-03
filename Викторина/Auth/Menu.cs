@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using Викторина.Data;
 using Викторина.Interfaces;
-
 
 namespace Викторина.Models
 {
@@ -14,43 +11,41 @@ namespace Викторина.Models
         {
             ICrud db = new RegistrationRepository();
            
-            var menu = new Dictionary<string, Action>()
+            var menuActions = new Dictionary<string, Action>()
             {
-             { "1. Регистрация", () => Methods.AddRegistration(db) },
-             { "2. Вход (Логин)", () => Entrance.Login(db) },
-             { "3. Выход", () => Environment.Exit(0) }         
+                { "1", () => Methods.AddRegistration(db) },
+                { "2", () => Entrance.Login(db) },
+                { "0", () => Environment.Exit(0) }
             };
+
             while (true)
             {
-                Console.Clear();
-                Console.WriteLine("Регистрация");
-                foreach (var item in menu)
+                try
                 {
-                    Console.WriteLine(item.Key);
-                }
-                Console.WriteLine("Выберите пункт \n");
-                string? choice = Console.ReadLine();
+                    UI.Clear();
+                    UI.Print("Главное меню");
+                    UI.Print("1. Регистрация");
+                    UI.Print("2. Вход (Логин)");
+                    UI.Print("0. Выход");
+                    UI.Print("");
 
-                bool found = false;
-                foreach (var item in menu)
-                {
-                    if (item.Key.StartsWith(choice))
+                    string choice = UI.ReadString("Выберите пункт");
+
+                    if (menuActions.TryGetValue(choice, out Action? action))
                     {
-                        item.Value();
-                        found = true;
-
-                        if (choice != "3")
-                        {
-                            Console.WriteLine("\nНажмите любую клавишу для продолжения...");
-                            Console.ReadKey();
-                        }
-                        break;
+                        action();
+                        if (choice != "0") UI.WaitForKey();
+                    }
+                    else
+                    {
+                        UI.Error("Неверный выбор! Пожалуйста, выберите пункт из списка.");
+                        UI.WaitForKey();
                     }
                 }
-                if (!found && choice != "3")
+                catch (Exception ex)
                 {
-                    Console.WriteLine("Неверный выбор!");
-                    Console.ReadKey();
+                    UI.Error($"Произошла непредвиденная ошибка: {ex.Message}");
+                    UI.WaitForKey();
                 }
             }
         }

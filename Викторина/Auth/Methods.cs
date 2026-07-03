@@ -2,18 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Reflection.Metadata;
 using Викторина.Interfaces;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-
-
 
 namespace Викторина.Models
 {
     public class Methods
     {
-        private static bool ValidateContact(User user, out string? errorMessage)
+        private static bool ValidateUser(User user, out string? errorMessage)
         {
             var context = new ValidationContext(user);
             var results = new List<ValidationResult>();
@@ -26,49 +21,43 @@ namespace Викторина.Models
             errorMessage = string.Join("\n", results.Select(r => r.ErrorMessage));
             return false;
         }
+
         public static void AddRegistration(ICrud db)
         {
-            Console.Clear();
-            Console.WriteLine("Регистрация на векторину:");
-
-            Console.WriteLine("Введите Имя:");
-            var firstName = Console.ReadLine()?.Trim();
-
-            Console.WriteLine("Введите фамилию:");
-            var lastName = Console.ReadLine()?.Trim();
-
-            Console.WriteLine("Введите Email: ");
-            var email = Console.ReadLine()?.Trim();
-
-            Console.WriteLine("Введите логин");
-            var Login = Console.ReadLine()?.Trim();
-
-            Console.WriteLine("Введите пароль:");
-            var password = Console.ReadLine()?.Trim() ?? string.Empty;
-
-            if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(email))
+            while (true)
             {
-                Console.WriteLine("Имя и Email нужно записать!");
-                return;
+                try
+                {
+                    UI.Clear();
+                    UI.Print("Регистрация");
+
+                    var user = new User
+                    {
+                        FirstName = UI.ReadString("Введите Имя"),
+                        LastName = UI.ReadString("Введите Фамилию"),
+                        Email = UI.ReadString("Введите Email"),
+                        Login = UI.ReadString("Введите Логин"),
+                        Password = UI.ReadPassword("Введите Пароль")
+                    };
+
+                    if (!ValidateUser(user, out string? errorMessage))
+                    {
+                        UI.Error($"Ошибка валидации:\n{errorMessage}");
+                        if (UI.ReadString("Попробовать снова? (y/n)").ToLower() != "y") return;
+                        continue;
+                    }
+
+                    db.Add(user);
+                    UI.Success($"\nУчастник {user.FirstName} {user.LastName} успешно зарегистрирован!");
+                    UI.Print($"Дата регистрации: {user.RegistrationDate}");
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    UI.Error($"Ошибка при регистрации: {ex.Message}");
+                    if (UI.ReadString("Попробовать снова? (y/n)").ToLower() != "y") return;
+                }
             }
-            var user = new User
-            {
-                FirstName = firstName,
-                LastName = lastName ?? string.Empty,
-                Email = email,
-                Password = password,
-                Login = Login
-            };
-            if (!ValidateContact(user, out string? errorMessage))
-            {
-                Console.WriteLine($"\nОшибка:\n{errorMessage}");
-
-                return;
-            }
-            db.Add(user);
-            Console.WriteLine($"\n Участник {firstName} {lastName}  успешно зарегистрирован!");
-            Console.WriteLine($"\n Дата регистрации: {user.RegistrationDate}");
-            Console.WriteLine($" Время регистрации: {user.RegistrationDate.ToShortTimeString()}");
         }
     }
 }

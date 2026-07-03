@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 using Викторина.Interfaces;
 using Викторина.Models;
@@ -26,7 +24,7 @@ namespace Викторина.Cabinet
                 }
             foreach (var result in user.Results.OrderByDescending(r => r.Date))
             {
-                Console.WriteLine($"{result.Date.ToShortDateString()} | {result.Topic,-10} | {result.TotalQuestions,8} | {result.CorrectAnswers,9} | {result.Score,5}");
+                Console.WriteLine($"{result.Date.ToShortDateString()} | {result.Topic} | Количество вопросов: {result.TotalQuestions} | Правильные ответы: {result.CorrectAnswers} | Баллы: {result.Score}");
             }
 
             Console.WriteLine("\nНажмите Enter для возврата...");

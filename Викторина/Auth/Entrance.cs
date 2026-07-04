@@ -35,7 +35,6 @@ namespace Викторина.Models
                         Profile.Menu(db, user);
                         break;
                     }
-
                     else
                     {
                         UI.Error("Неправильный пароль!");

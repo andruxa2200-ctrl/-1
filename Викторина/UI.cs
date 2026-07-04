@@ -55,7 +55,7 @@ namespace Викторина
             }
             Console.WriteLine();
             string password = new string(passwordChars.ToArray());
-            // Очищаем список символов после создания строки
+
             for (int i = 0; i < passwordChars.Count; i++) passwordChars[i] = '\0';
             return password;
         }
@@ -77,6 +77,22 @@ namespace Викторина
                 {
                     Error("Некорректный ввод. Попробуйте снова.");
                 }
+            }
+        }
+
+        public static bool Confirm(string message)
+        {
+            Print($"{message} (y/n)");
+            return Console.ReadLine()?.Trim().ToLower() == "y";
+        }
+
+        public static string ReadValidated(string prompt, Func<string, bool> validator, string errorMsg, bool isPassword = false)
+        {
+            while (true)
+            {
+                string value = isPassword ? ReadPassword(prompt) : ReadString(prompt);
+                if (validator(value)) return value;
+                Error(errorMsg);
             }
         }
 

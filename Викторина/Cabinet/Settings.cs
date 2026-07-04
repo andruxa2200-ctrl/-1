@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿using System;
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿using System;
 using System.ComponentModel.DataAnnotations;
 using Викторина.Interfaces;
 using Викторина.Models;
@@ -27,26 +27,20 @@ namespace Викторина.Cabinet
                     switch (choice)
                     {
                         case "1":
-                            string newName = UI.ReadString("Введите новое Имя");
-                            if (!string.IsNullOrWhiteSpace(newName))
-                            {
-                                user.UpdateProfile(newName, user.LastName);
-                                db.Update(user);
-                                db.SaveChanges();
-                                UI.Success("Имя успешно изменено!");
-                                UI.WaitForKey();
-                            }
+                            string newName = UI.ReadValidated("Введите новое Имя", (val) => !string.IsNullOrWhiteSpace(val), "Имя не может быть пустым.");
+                            user.UpdateProfile(newName, user.LastName);
+                            db.Update(user);
+                            db.SaveChanges();
+                            UI.Success("Имя успешно изменено!");
+                            UI.WaitForKey();
                             break;
                         case "2":
-                            string newLastName = UI.ReadString("Введите новую Фамилию");
-                            if (!string.IsNullOrWhiteSpace(newLastName))
-                            {
-                                user.UpdateProfile(user.FirstName, newLastName);
-                                db.Update(user);
-                                db.SaveChanges();
-                                UI.Success("Фамилия успешно изменена!");
-                                UI.WaitForKey();
-                            }
+                            string newLastName = UI.ReadValidated("Введите новую Фамилию", (val) => !string.IsNullOrWhiteSpace(val), "Фамилия не может быть пустой.");
+                            user.UpdateProfile(user.FirstName, newLastName);
+                            db.Update(user);
+                            db.SaveChanges();
+                            UI.Success("Фамилия успешно изменена!");
+                            UI.WaitForKey();
                             break;
 
                         case "3":
@@ -77,7 +71,7 @@ namespace Викторина.Cabinet
                 if (user.Password != oldPassword)
                 {
                     UI.Error("Неверный старый пароль!");
-                    if (UI.ReadString("Попробовать снова? (y/n)").ToLower() != "y") return;
+                    if (!UI.Confirm("Попробовать снова?")) return;
                     continue;
                 }
                 break;
@@ -85,21 +79,14 @@ namespace Викторина.Cabinet
 
             while (true)
             {
-                string newPassword = UI.ReadPassword("Введите новый пароль");
-                
-                if (newPassword.Length < 4)
-                {
-                    UI.Error("Пароль слишком короткий (минимум 4 символа)!");
-                    if (UI.ReadString("Попробовать снова? (y/n)").ToLower() != "y") return;
-                    continue;
-                }
+                string newPassword = UI.ReadValidated("Введите новый пароль", (val) => val.Length >= 4, "Пароль слишком короткий (минимум 4 символа)!", true);
 
                 string confirmPassword = UI.ReadPassword("Подтвердите новый пароль");
 
                 if (newPassword != confirmPassword)
                 {
                     UI.Error("Пароли не совпадают!");
-                    if (UI.ReadString("Попробовать снова? (y/n)").ToLower() != "y") return;
+                    if (!UI.Confirm("Попробовать снова?")) return;
                     continue;
                 }
 

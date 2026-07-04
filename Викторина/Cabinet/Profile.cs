@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿﻿﻿﻿using System;
 using System.Linq;
 using Викторина.Cabinet.Quiz;
 using Викторина.Interfaces;
@@ -144,10 +144,7 @@ namespace Викторина.Cabinet
                     questions.Add(q);
                 }
 
-                string directoryPath = "Quizzes";
-                string filePath = System.IO.Path.Combine(directoryPath, $"{topicKey}.json");
-                string json = System.Text.Json.JsonSerializer.Serialize(questions, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
-                System.IO.File.WriteAllText(filePath, json);
+                Data.QuizDataManager.SaveQuestions(topicKey, questions);
 
                 UI.Success("\nВопросы успешно добавлены!");
                 UI.WaitForKey();

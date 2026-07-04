@@ -23,7 +23,6 @@ namespace Викторина.Data
 
         private static List<QuestionModel> LoadQuestions(string topicKey)
         {
-            // Защита от Path Traversal
             if (string.IsNullOrWhiteSpace(topicKey) || topicKey.Any(c => Path.GetInvalidFileNameChars().Contains(c) || c == '.'))
             {
                 throw new ArgumentException("Недопустимое название темы викторины.");
@@ -51,7 +50,7 @@ namespace Викторина.Data
             }
         }
 
-        private static void SaveQuestions(string topicKey, List<QuestionModel> questions)
+        public static void SaveQuestions(string topicKey, List<QuestionModel> questions)
         {
             string filePath = Path.Combine(DirectoryPath, $"{topicKey}.json");
             string json = JsonSerializer.Serialize(questions, new JsonSerializerOptions { WriteIndented = true });

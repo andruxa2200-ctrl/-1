@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Викторина.Interfaces;
 using Викторина.Models;
 
@@ -8,29 +7,25 @@ namespace Викторина.Cabinet
     public class Results
     {
         public static void Show(ICrud db, User user)
-        {       
-           
-                Console.Clear();
-                Console.WriteLine("Показать мой результат: ");
+        {
+            UI.Clear();
+            UI.Print("Мои результаты\n");
 
-                if (user.Results == null || !user.Results.Any())
-                {
-                    Console.WriteLine("У вас пока нет результатов.");
-                    Console.WriteLine("Пройдите викторину, чтобы получить результаты!");
-                    Console.WriteLine("\nНажмите Enter для возврата...");
-                    Console.ReadLine();
-                    return;
-
-                }
-            foreach (var result in user.Results.OrderByDescending(r => r.Date))
+            if (user.Results == null || !user.Results.Any())
             {
-                Console.WriteLine($"{result.Date.ToShortDateString()} | {result.Topic} | Количество вопросов: {result.TotalQuestions} | Правильные ответы: {result.CorrectAnswers} | Баллы: {result.Score}");
+                UI.Print("У вас пока нет результатов.");
+                UI.Print("Пройдите викторину, чтобы получить результаты!");
+                UI.WaitForKey();
+                return;
             }
 
-            Console.WriteLine("\nНажмите Enter для возврата...");
-            Console.ReadLine();
-        }
+            foreach (var result in user.Results.OrderByDescending(r => r.Date))
+            {
+                UI.Print($"{result.Date:dd.MM.yyyy HH:mm} | {result.Topic} | Вопросов: {result.TotalQuestions} | Верно: {result.CorrectAnswers} | Баллы: {result.Score}");
+            }
 
+            UI.WaitForKey();
+        }
     }
 }
 

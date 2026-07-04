@@ -56,6 +56,26 @@ namespace Викторина
             return password;
         }
 
+        public static int ReadInt(string prompt, int min, int max)
+        {
+            while (true)
+            {
+                try
+                {
+                    Console.Write($"{prompt} ({min}-{max}): ");
+                    if (int.TryParse(Console.ReadLine(), out int result) && result >= min && result <= max)
+                    {
+                        return result;
+                    }
+                    Error($"Пожалуйста, введите число от {min} до {max}.");
+                }
+                catch
+                {
+                    Error("Некорректный ввод. Попробуйте снова.");
+                }
+            }
+        }
+
         public static void WaitForKey()
         {
             Print("\nНажмите любую клавишу для продолжения...");

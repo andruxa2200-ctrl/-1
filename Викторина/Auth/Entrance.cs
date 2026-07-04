@@ -14,7 +14,7 @@ namespace Викторина.Models
                 try
                 {
                     UI.Clear();
-                    UI.Print("=== ВХОД В СИСТЕМУ ===\n");
+                    UI.Print("Вход в систему\n");
 
                     string login = UI.ReadString("Введите Login");
                     string password = UI.ReadPassword("Введите Password");
@@ -32,7 +32,7 @@ namespace Викторина.Models
                     {
                         UI.Success($"Вход выполнен! Добро пожаловать, {user.FirstName}!");
                         UI.WaitForKey();
-                        Profile.Show(db, user);
+                        Profile.Menu(db, user);
                         break;
                     }
                     else

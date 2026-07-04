@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Викторина.Models
 {
@@ -14,4 +12,4 @@ namespace Викторина.Models
         public int CorrectAnswers { get; set; }
         public int Score { get; set; }
     }
-}// Результаты викторин 
+}

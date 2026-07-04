@@ -37,7 +37,7 @@ namespace Викторина.Models
                         LastName = UI.ReadString("Введите Фамилию"),
                         Email = UI.ReadString("Введите Email"),
                         Login = UI.ReadString("Введите Логин"),
-                        Password = UI.ReadPassword("Введите Пароль")
+                        Password = UI.ReadPassword("Придумайте Пароль")
                     };
 
                     if (!ValidateUser(user, out string? errorMessage))

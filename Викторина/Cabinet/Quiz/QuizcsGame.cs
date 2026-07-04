@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Викторина.Data;
 using Викторина.Interfaces;
 using Викторина.Models;
+using Викторина.Data;
 
 namespace Викторина.Cabinet.Quiz
 {
@@ -11,37 +9,45 @@ namespace Викторина.Cabinet.Quiz
     {
         public static void Start(ICrud db, User user)
         {
-            Console.Clear();
-            Console.WriteLine("Новая викторина: ");
-
-            Console.WriteLine("Выберите тему:");
-            Console.WriteLine("1. История");
-            Console.WriteLine("2. География");
-            Console.WriteLine("3. Наука");   
-            Console.WriteLine("4. Назад");
-
-            Console.Write("Ваш выбор: ");
-            string? choice = Console.ReadLine();
-
-            switch (choice)
+            while (true)
             {
-                case "1":
-                    Questions.StartHistoryQuiz(db, user);
-                    break;
-                case "2":
-                    StartGeographyQuiz(db, user);
-                    break;
-                case "3":
-                    StartScienceQuiz(db, user);
-                    break;
-                case "4":
-                    return;
-                default:            
-                    break;
+                try
+                {
+                    UI.Clear();
+                    UI.Print("Выбор темы викторины\n");
+                    UI.Print("1. История");
+                    UI.Print("2. География");
+                    UI.Print("3. Наука");
+                    UI.Print("4. Назад");
+                    UI.Print("");
+
+                    string choice = UI.ReadString("Ваш выбор");
+
+                    switch (choice)
+                    {
+                        case "1":
+                            Questions.RunQuiz(db, user, "История", "History");
+                            break;
+                        case "2":
+                            Questions.RunQuiz(db, user, "География", "Geography");
+                            break;
+                        case "3":
+                            Questions.RunQuiz(db, user, "Наука", "Science");
+                            break;
+                        case "4":
+                            return;
+                        default:
+                            UI.Error("Неверный выбор!");
+                            UI.WaitForKey();
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    UI.Error($"Ошибка в меню викторины: {ex.Message}");
+                    UI.WaitForKey();
+                }
             }
         }
-
-        private static void StartGeographyQuiz(ICrud db, User user) { }
-        private static void StartScienceQuiz(ICrud db, User user) { }
     }
 }

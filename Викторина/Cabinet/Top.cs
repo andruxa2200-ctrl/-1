@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using Викторина.Interfaces;
-using Викторина.Models;
 
 namespace Викторина.Cabinet
 {
@@ -11,36 +7,34 @@ namespace Викторина.Cabinet
     {
         public static void ShowTop(ICrud db)
         {
-            Console.Clear();
-            Console.WriteLine("=== ТОП-20 УЧАСТНИКОВ ===\n");
+            UI.Clear();
+            UI.Print("Топ-10 участников\n");
 
             var allUsers = db.GetAll();
 
             if (allUsers == null || !allUsers.Any())
             {
-                Console.WriteLine("Нет зарегистрированных участников!");
-                Console.WriteLine("\nНажмите любую клавишу для возврата...");
-                Console.ReadKey();
+                UI.Print("Нет зарегистрированных участников!");
+                UI.WaitForKey();
                 return;
             }
 
-            var top20 = allUsers
+            var top10 = allUsers
                      .OrderByDescending(u => u.Score)
-                     .Take(20)
+                     .Take(10)
                      .ToList();
 
-            Console.WriteLine("{0,-5} | {1,-15} | {2,-15} | {3,-6}", "№", "Логин", "Имя", "Баллы");
-            Console.WriteLine(new string('-', 50));
+            UI.Print(string.Format("{0,-5} | {1,-15} | {2,-15} | {3,-6}", "№", "Логин", "Имя", "Баллы"));
+            UI.Print(new string('-', 50));
 
             int place = 1;
-            foreach (var user in top20)
+            foreach (var user in top10)
             {
-                Console.WriteLine("{0,-5} | {1,-15} | {2,-15} | {3,-6}", place, user.Login, user.FirstName, user.Score);
+                UI.Print(string.Format("{0,-5} | {1,-15} | {2,-15} | {3,-6}", place, user.Login, user.FirstName, user.Score));
                 place++;
             }
 
-            Console.WriteLine("\nНажмите любую клавишу для возврата...");
-            Console.ReadKey();
+            UI.WaitForKey();
         }
     }
 }

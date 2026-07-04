@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Викторина.Interfaces;
 using Викторина.Models;
 
@@ -10,41 +8,42 @@ namespace Викторина.Cabinet
     {
         public static void ChangePassword(ICrud db, User user)
         {
-            Console.Clear();
-            Console.WriteLine("Изменить пороль");
-
-            Console.Write("Введите старый пароль: ");
-            string oldPassword = Console.ReadLine()?.Trim() ?? string.Empty;
-
-            if (user.Password != oldPassword)
+            try
             {
-                Console.WriteLine("Неверный старый пароль!");
-                Console.ReadKey();
-                return;
+                UI.Clear();
+                UI.Print("Изменение паролья");
+
+                string oldPassword = UI.ReadPassword("Введите старый пароль");
+
+                if (user.Password != oldPassword)
+                {
+                    UI.Error("Неверный старый пароль!");
+                    UI.WaitForKey();
+                    return;
+                }
+
+                string newPassword = UI.ReadPassword("Введите новый пароль");
+                string confirmPassword = UI.ReadPassword("Подтвердите новый пароль");
+
+                if (newPassword != confirmPassword)
+                {
+                    UI.Error("Пароли не совпадают!");
+                    UI.WaitForKey();
+                    return;
+                }
+
+                user.Password = newPassword;
+                db.Update(user);
+                db.SaveChanges();
+
+                UI.Success("Пароль успешно изменен!");
+                UI.WaitForKey();
             }
-
-            Console.Write("Введите новый пароль: ");
-            string newPassword = Console.ReadLine()?.Trim() ?? string.Empty;
-
-            Console.Write("Подтвердите новый пароль: ");
-            string confirmPassword = Console.ReadLine()?.Trim() ?? string.Empty;
-
-            if (newPassword != confirmPassword)
+            catch (Exception ex)
             {
-                Console.WriteLine("Пароли не совпадают!");
-                Console.ReadKey();
-                return;
+                UI.Error($"Ошибка при смене пароля: {ex.Message}");
+                UI.WaitForKey();
             }
-
-            user.Password = newPassword;
-            db.Update(user);
-
-            Console.WriteLine("Пароль успешно изменен!");
-            Console.ReadKey();
-
-            user.Password = newPassword;
-
-            db.SaveChanges();
         }
     }
 }

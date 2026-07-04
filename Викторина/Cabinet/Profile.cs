@@ -7,7 +7,7 @@ namespace Викторина.Cabinet
 {
     public class Profile
     {
-        public static void Show(ICrud db, User user)
+        public static void Menu(ICrud db, User user)
         {
             while (true)
             {
@@ -21,7 +21,8 @@ namespace Викторина.Cabinet
                     UI.Print("1. Новая викторина");
                     UI.Print("2. Мои результаты");
                     UI.Print("3. Топ - 20");
-                    UI.Print("4. Настройки");
+                    UI.Print("4. Список участников");
+                    UI.Print("5. Настройки");
                     UI.Print("0. Выход из аккаунта");
                     UI.Print("");
 
@@ -39,6 +40,9 @@ namespace Викторина.Cabinet
                             Top.ShowTop(db);
                             break;
                         case "4":
+                            Show.All(db);
+                            break;
+                        case "5":
                             Settings.ChangePassword(db, user);
                             break;
                         case "0":

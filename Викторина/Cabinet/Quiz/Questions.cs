@@ -1,72 +1,66 @@
-﻿using System;
-using System.IO;
+﻿﻿using System;
 using Викторина.Interfaces;
 using Викторина.Models;
+using Викторина.Data;
 
 namespace Викторина.Cabinet.Quiz
 {
     public class Questions
     {
-        public static void StartHistoryQuiz(ICrud db, User user)
+        public static void RunQuiz(ICrud db, User user, string topicName, string topicKey)
         {
-            RunQuiz(db, user, "История", "History.txt");
+            try
+            {
+                // Получаем 10 случайных вопросов из 20 доступных в JSON
+                var questions = QuizDataManager.GetRandomQuestions(topicKey, 10);
+                
+                if (questions.Count == 0)
+                {
+                    UI.Error("Вопросы для этой темы не найдены или файл поврежден!");
+                    UI.WaitForKey();
+                    return;
+                }
+
+                int correctAnswersCount = 0;
+                UI.Clear();
+                UI.Print($"--- Викторина по теме: {topicName} ---\n");
+                UI.Print("Вам предстоит ответить на 10 случайных вопросов.\n");
+
+                for (int i = 0; i < questions.Count; i++)
+                {
+                    var q = questions[i];
+                    UI.Print($"Вопрос {i + 1} из {questions.Count}: {q.Text}");
+                    
+                    for (int j = 0; j < q.Options.Count; j++)
+                    {
+                        UI.Print($"{j + 1}. {q.Options[j]}");
+                    }
+
+                    int userChoice = UI.ReadInt("Ваш ответ", 1, q.Options.Count);
+
+                    if (userChoice - 1 == q.CorrectIndex)
+                    {
+                        UI.Success("Правильно!\n");
+                        correctAnswersCount++;
+                    }
+                    else
+                    {
+                        UI.Error($"Неверно. Правильный ответ: {q.Options[q.CorrectIndex]}\n");
+                    }
+                }
+
+                FinishQuiz(db, user, topicName, correctAnswersCount, questions.Count);
+            }
+            catch (Exception ex)
+            {
+                UI.Error($"Произошла ошибка во время викторины: {ex.Message}");
+                UI.WaitForKey();
+            }
         }
 
-        public static void RunQuiz(ICrud db, User user, string topic, string filePath)
+        private static void FinishQuiz(ICrud db, User user, string topic, int correctCount, int totalCount)
         {
-            string fullPath = Path.GetFullPath(filePath);
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"Файл не найден: {filePath}");
-                Console.WriteLine($"Полный путь: {fullPath}");
-                Console.WriteLine("Создайте файл или проверьте его расположение.");
-                Console.ReadKey();
-                return;
-            }
-
-            var lines = File.ReadAllLines(filePath);
-            if (lines.Length == 0)
-            {
-                Console.WriteLine("Файл пуст!");
-                Console.ReadKey();
-                return;
-            }
-            int correctAnswersCount = 0;
-            int totalQuestions = 0;
-
-            Console.Clear();
-            Console.WriteLine($"--- Викторина по теме: {topic} ---\n");
-
-            for (int i = 0; i < lines.Length; i += 6)
-            {
-                if (i + 5 >= lines.Length) break;
-
-                totalQuestions++;
-                string question = lines[i];
-                string[] options = { lines[i + 1], lines[i + 2], lines[i + 3], lines[i + 4] };
-                string correctAnswer = lines[i + 5].Trim();
-
-                Console.WriteLine($"Вопрос {totalQuestions}: {question}");
-                for (int j = 0; j < 4; j++)
-                {
-                    Console.WriteLine($"{j + 1}. {options[j]}");
-                }
-
-                Console.Write("Ваш ответ (1-4): ");
-                string? userChoice = Console.ReadLine();
-
-                if (userChoice == correctAnswer)
-                {
-                    Console.WriteLine("Правильно!\n");
-                    correctAnswersCount++;
-                }
-                else
-                {
-                    Console.WriteLine($"Неверно. Правильный ответ: {correctAnswer}\n");
-                }
-            }
-
-            int scoreGained = correctAnswersCount * 10; // Например, 10 баллов за ответ
+            int scoreGained = correctCount * 10;
             user.Score += scoreGained;
 
             var result = new QuizResult
@@ -75,19 +69,18 @@ namespace Викторина.Cabinet.Quiz
                 UserLogin = user.Login,
                 Topic = topic,
                 Date = DateTime.Now,
-                TotalQuestions = totalQuestions,
-                CorrectAnswers = correctAnswersCount,
+                TotalQuestions = totalCount,
+                CorrectAnswers = correctCount,
                 Score = scoreGained
             };
 
             user.Results.Add(result);
             db.Update(user);
 
-            Console.WriteLine("Викторина окончена!");
-            Console.WriteLine($"Правильных ответов: {correctAnswersCount} из {totalQuestions}");
-            Console.WriteLine($"Заработано баллов: {scoreGained}");
-            Console.WriteLine("Нажмите любую клавишу для выхода...");
-            Console.ReadKey();
+            UI.Print("Викторина окончена");
+            UI.Print($"Правильных ответов: {correctCount} из {totalCount}");
+            UI.Success($"Заработано баллов: {scoreGained}");
+            UI.WaitForKey();
         }
     }
 }

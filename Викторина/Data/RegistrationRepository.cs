@@ -6,7 +6,6 @@ using Викторина.Models;
 
 namespace Викторина.Data
 {
-    //Отвечает за ОБСЛУЖИВАНИЕ читателей
     public class RegistrationRepository : ICrud
     {
         private readonly JsonContext _context;

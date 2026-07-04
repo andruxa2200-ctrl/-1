@@ -1,61 +1,79 @@
 using Xunit;
 using Викторина.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace Викторина.Tests
 {
-    public class UserValidationTests
+    public class UserTests
     {
         [Fact]
-        public void ValidUser_ShouldPassValidation()
+        public void SetRegistrationData_ShouldAssignFieldsCorrectly()
         {
             // Arrange
             var user = new User();
-            user.SetRegistrationData("Иван", "Иванов", "test@example.com", "ivan123", "password123");
+            string firstName = "Иван";
+            string lastName = "Иванов";
+            string email = "test@mail.com";
+            string login = "admin";
+            string password = "12345";
 
             // Act
-            var context = new ValidationContext(user);
-            var results = new List<ValidationResult>();
-            var isValid = Validator.TryValidateObject(user, context, results, true);
+            user.SetRegistrationData(firstName, lastName, email, login, password);
 
             // Assert
-            Assert.True(isValid);
+            Assert.Equal(firstName, user.FirstName);
+            Assert.Equal(lastName, user.LastName);
+            Assert.Equal(email, user.Email);
+            Assert.Equal(login, user.Login);
+            Assert.Equal(password, user.Password);
+            Assert.True((DateTime.Now - user.RegistrationDate).TotalSeconds < 5);
         }
 
         [Fact]
-        public void UserWithEmptyFirstName_ShouldFailValidation()
+        public void ChangePassword_ShouldUpdatePassword_WhenLengthIsValid()
         {
             // Arrange
             var user = new User();
-            user.SetRegistrationData("", "Иванов", "test@example.com", "ivan123", "password123");
+            user.SetRegistrationData("A", "B", "c@d.com", "login", "oldPass");
 
             // Act
-            var context = new ValidationContext(user);
-            var results = new List<ValidationResult>();
-            var isValid = Validator.TryValidateObject(user, context, results, true);
+            user.ChangePassword("newSecurePass");
 
             // Assert
-            Assert.False(isValid);
-            Assert.Contains(results, r => r.MemberNames.Contains("FirstName"));
+            Assert.Equal("newSecurePass", user.Password);
         }
 
         [Fact]
-        public void UserWithInvalidEmail_ShouldFailValidation()
+        public void ChangePassword_ShouldNotUpdatePassword_WhenTooShort()
         {
             // Arrange
             var user = new User();
-            user.SetRegistrationData("Иван", "Иванов", "invalid-email", "ivan123", "password123");
+            user.SetRegistrationData("A", "B", "c@d.com", "login", "oldPass");
 
             // Act
-            var context = new ValidationContext(user);
-            var results = new List<ValidationResult>();
-            var isValid = Validator.TryValidateObject(user, context, results, true);
+            user.ChangePassword("123"); // Слишком короткий
 
             // Assert
-            Assert.False(isValid);
-            Assert.Contains(results, r => r.MemberNames.Contains("Email"));
+            Assert.Equal("oldPass", user.Password);
+        }
+
+        [Fact]
+        public void UpdateProfile_ShouldChangeNameAndLastName()
+        {
+            // Arrange
+            var user = new User();
+            user.SetRegistrationData("OldName", "OldLast", "e@m.com", "l", "p");
+
+            // Act
+            user.UpdateProfile("NewName", "NewLast");
+
+            // Assert
+            Assert.Equal("NewName", user.FirstName);
+            Assert.Equal("NewLast", user.LastName);
         }
     }
 }
+

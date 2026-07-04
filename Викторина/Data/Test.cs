@@ -17,7 +17,6 @@ namespace Викторина.Data
                     CorrectIndex = 0
                 });
             }
-            UI.WaitForKey();
             return questions;
         }
     }

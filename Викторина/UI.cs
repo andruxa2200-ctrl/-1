@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Викторина
 {
@@ -36,23 +37,26 @@ namespace Викторина
         public static string ReadPassword(string prompt)
         {
             Console.Write($"{prompt}: ");
-            string password = string.Empty;
+            var passwordChars = new List<char>();
             while (true)
             {
                 var key = Console.ReadKey(true);
                 if (key.Key == ConsoleKey.Enter) break;
-                if (key.Key == ConsoleKey.Backspace && password.Length > 0)
+                if (key.Key == ConsoleKey.Backspace && passwordChars.Count > 0)
                 {
-                    password = password[..^1];
+                    passwordChars.RemoveAt(passwordChars.Count - 1);
                     Console.Write("\b \b");
                 }
                 else if (!char.IsControl(key.KeyChar))
                 {
-                    password += key.KeyChar;
+                    passwordChars.Add(key.KeyChar);
                     Console.Write("*");
                 }
             }
             Console.WriteLine();
+            string password = new string(passwordChars.ToArray());
+            // Очищаем список символов после создания строки
+            for (int i = 0; i < passwordChars.Count; i++) passwordChars[i] = '\0';
             return password;
         }
 

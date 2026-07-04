@@ -12,14 +12,8 @@ namespace Викторина.Tests
         public void ValidUser_ShouldPassValidation()
         {
             // Arrange
-            var user = new User
-            {
-                FirstName = "Иван",
-                LastName = "Иванов",
-                Email = "test@example.com",
-                Login = "ivan123",
-                Password = "password123"
-            };
+            var user = new User();
+            user.SetRegistrationData("Иван", "Иванов", "test@example.com", "ivan123", "password123");
 
             // Act
             var context = new ValidationContext(user);
@@ -34,14 +28,8 @@ namespace Викторина.Tests
         public void UserWithEmptyFirstName_ShouldFailValidation()
         {
             // Arrange
-            var user = new User
-            {
-                FirstName = "",
-                LastName = "Иванов",
-                Email = "test@example.com",
-                Login = "ivan123",
-                Password = "password123"
-            };
+            var user = new User();
+            user.SetRegistrationData("", "Иванов", "test@example.com", "ivan123", "password123");
 
             // Act
             var context = new ValidationContext(user);
@@ -57,14 +45,8 @@ namespace Викторина.Tests
         public void UserWithInvalidEmail_ShouldFailValidation()
         {
             // Arrange
-            var user = new User
-            {
-                FirstName = "Иван",
-                LastName = "Иванов",
-                Email = "invalid-email",
-                Login = "ivan123",
-                Password = "password123"
-            };
+            var user = new User();
+            user.SetRegistrationData("Иван", "Иванов", "invalid-email", "ivan123", "password123");
 
             // Act
             var context = new ValidationContext(user);

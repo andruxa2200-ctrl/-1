@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿﻿﻿﻿﻿﻿﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,57 +8,55 @@ namespace Викторина.Models
 {
     public class Methods
     {
-        private static bool ValidateUser(User user, out string? errorMessage)
+        public static void AddRegistration(ICrud db)
         {
-            var context = new ValidationContext(user);
-            var results = new List<ValidationResult>();
+            UI.Clear();
+            UI.Print("Регистрация\n");
 
-            if (Validator.TryValidateObject(user, context, results, true))
+            string firstName = ReadValidatedProperty("Введите Имя", (val) => !string.IsNullOrWhiteSpace(val), "Имя не может быть пустым.");
+            string lastName = ReadValidatedProperty("Введите Фамилию", (val) => !string.IsNullOrWhiteSpace(val), "Фамилия не может быть пустым.");
+            string email = ReadValidatedProperty("Введите Email", (val) => val.Contains("@") && val.Contains("."), "Введите корректный Email.");
+            string login = ReadValidatedProperty("Введите Логин", (val) => 
             {
-                errorMessage = null;
+                if (val.Length < 2) return false;
+                if (db.GetAll().Any(u => u.Login == val))
+                {
+                    UI.Error("Такой логин уже существует!");
+                    return false;
+                }
                 return true;
-            }
-            errorMessage = string.Join("\n", results.Select(r => r.ErrorMessage));
-            return false;
+            }, "Логин должен быть не менее 2 символов.");
+            string password = ReadValidatedPassword("Введите Пароль", (val) => val.Length >= 4, "Пароль должен быть не менее 4 символов.");
+
+            var user = new User();
+            user.SetRegistrationData(firstName, lastName, email, login, password);
+
+            db.Add(user);
+            db.SaveChanges();
+            UI.Success($"\nУчастник {user.FirstName} {user.LastName} успешно зарегистрирован!");
+            UI.Print($"Дата регистрации: {user.RegistrationDate}");
+            UI.WaitForKey();
         }
 
-        public static void AddRegistration(ICrud db)
+
+        private static string ReadValidatedProperty(string prompt, Func<string, bool> validator, string errorMsg)
         {
             while (true)
             {
-                try
-                {
-                    UI.Clear();
-                    UI.Print("Регистрация");
+                string value = UI.ReadString(prompt);
+                if (validator(value)) return value;
+                UI.Error(errorMsg);
+            }
+        }
 
-                    var user = new User
-                    {
-                        FirstName = UI.ReadString("Введите Имя"),
-                        LastName = UI.ReadString("Введите Фамилию"),
-                        Email = UI.ReadString("Введите Email"),
-                        Login = UI.ReadString("Введите Логин"),
-                        Password = UI.ReadPassword("Придумайте Пароль")
-                    };
-
-                    if (!ValidateUser(user, out string? errorMessage))
-                    {
-                        UI.Error($"Ошибка валидации:\n{errorMessage}");
-                        if (UI.ReadString("Попробовать снова? (y/n)").ToLower() != "y") return;
-                        continue;
-                    }
-
-                    db.Add(user);
-                    UI.Success($"\nУчастник {user.FirstName} {user.LastName} успешно зарегистрирован!");
-                    UI.Print($"Дата регистрации: {user.RegistrationDate}");
-                    break;
-                }
-                catch (Exception ex)
-                {
-                    UI.Error($"Ошибка при регистрации: {ex.Message}");
-                    if (UI.ReadString("Попробовать снова? (y/n)").ToLower() != "y") return;
-                }
+        private static string ReadValidatedPassword(string prompt, Func<string, bool> validator, string errorMsg)
+        {
+            while (true)
+            {
+                string value = UI.ReadPassword(prompt);
+                if (validator(value)) return value;
+                UI.Error(errorMsg);
             }
         }
     }
 }
-

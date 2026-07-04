@@ -18,7 +18,7 @@ namespace Викторина.Cabinet.Quiz
                     UI.Print("1. История");
                     UI.Print("2. География");
                     UI.Print("3. Наука");
-                    UI.Print("4. Назад");
+                    UI.Print("0. Назад");
                     UI.Print("");
 
                     string choice = UI.ReadString("Ваш выбор");
@@ -34,7 +34,7 @@ namespace Викторина.Cabinet.Quiz
                         case "3":
                             Questions.RunQuiz(db, user, "Наука", "Science");
                             break;
-                        case "4":
+                        case "0":
                             return;
                         default:
                             UI.Error("Неверный выбор!");

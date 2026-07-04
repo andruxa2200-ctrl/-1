@@ -11,7 +11,6 @@ namespace Викторина.Cabinet.Quiz
         {
             try
             {
-                // Получаем 10 случайных вопросов из 20 доступных в JSON
                 var questions = QuizDataManager.GetRandomQuestions(topicKey, 10);
                 
                 if (questions.Count == 0)
@@ -22,30 +21,25 @@ namespace Викторина.Cabinet.Quiz
                 }
 
                 int correctAnswersCount = 0;
-                UI.Clear();
-                UI.Print($"--- Викторина по теме: {topicName} ---\n");
-                UI.Print("Вам предстоит ответить на 10 случайных вопросов.\n");
 
                 for (int i = 0; i < questions.Count; i++)
                 {
+                    UI.Clear();
+                    UI.Print($"Викторина по теме: {topicName}\n");
+                    UI.Print("Вам предстоит ответить на 10 вопросов.\n");
                     var q = questions[i];
-                    UI.Print($"Вопрос {i + 1} из {questions.Count}: {q.Text}");
+                    UI.Print($"Вопрос {i + 1} из {questions.Count}: {q.Text}\n");
                     
                     for (int j = 0; j < q.Options.Count; j++)
                     {
                         UI.Print($"{j + 1}. {q.Options[j]}");
                     }
 
-                    int userChoice = UI.ReadInt("Ваш ответ", 1, q.Options.Count);
+                    int userChoice = UI.ReadInt("\nВаш ответ", 1, q.Options.Count);
 
                     if (userChoice - 1 == q.CorrectIndex)
                     {
-                        UI.Success("Правильно!\n");
                         correctAnswersCount++;
-                    }
-                    else
-                    {
-                        UI.Error($"Неверно. Правильный ответ: {q.Options[q.CorrectIndex]}\n");
                     }
                 }
 

@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Linq;
 using Викторина.Cabinet;
 using Викторина.Interfaces;
@@ -35,6 +35,7 @@ namespace Викторина.Models
                         Profile.Menu(db, user);
                         break;
                     }
+
                     else
                     {
                         UI.Error("Неправильный пароль!");

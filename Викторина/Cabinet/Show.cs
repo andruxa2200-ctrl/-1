@@ -12,7 +12,7 @@ namespace Викторина.Cabinet
 
             var all = db.GetAll();
 
-            if (all != null)
+            if (all == null)
             {
                 UI.Print("Нет зарегистрированных участников!");
                 return;
@@ -24,6 +24,7 @@ namespace Викторина.Cabinet
                 UI.Print($"{counter}.{user.FirstName} {user.LastName} | Логин {user.Login} |  Email: {user.Email} | Баллы: {user.Score} ");   
                 counter++;
             }
+            UI.WaitForKey();
         }
     }
 }

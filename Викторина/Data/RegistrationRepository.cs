@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Викторина.Interfaces;
@@ -27,11 +27,7 @@ namespace Викторина.Data
             var existing = GetById(user.Id);
             if (existing != null)
             {
-                existing.FirstName = user.FirstName;
-                existing.LastName = user.LastName;
-                existing.Email = user.Email;
-                existing.Password = user.Password;
-                existing.Login = user.Login;
+                existing.SetRegistrationData(user.FirstName, user.LastName, user.Email, user.Login, user.Password);
                 existing.Score = user.Score;
                 _context.SaveChanges();
             }

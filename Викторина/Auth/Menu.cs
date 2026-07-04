@@ -23,7 +23,7 @@ namespace Викторина.Models
                 try
                 {
                     UI.Clear();
-                    UI.Print("Главное меню");
+                    UI.Print("Главное меню\n");
                     UI.Print("1. Регистрация");
                     UI.Print("2. Вход (Логин)");
                     UI.Print("0. Выход");
@@ -34,7 +34,6 @@ namespace Викторина.Models
                     if (menuActions.TryGetValue(choice, out Action? action))
                     {
                         action();
-                        if (choice != "0") UI.WaitForKey();
                     }
                     else
                     {
